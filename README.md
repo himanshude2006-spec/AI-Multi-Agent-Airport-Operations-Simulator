@@ -1,156 +1,133 @@
-# AI Multi-Agent Airport Operations Simulator
+- **AI Multi-Agent Airport Operations Simulator**
 
-## Overview
+- **Overview**
+  - An airport operations simulator built with Python and FastAPI.
+  - The project models flights, runways, gates, weather, fuel levels, delays, and emergency situations.
+  - Different airport resources work as separate agents and interact during the simulation.
+  - The project focuses on scheduling, simulation, APIs, databases, and event-based systems.
 
-This project is a backend simulation platform that models airport operations using autonomous software agents and an event-driven architecture.
+- **Main Features**
+  - Airport operation simulation
+  - Flight arrival and landing management
+  - Runway scheduling
+  - Gate assignment
+  - Fuel tracking
+  - Weather changes
+  - Emergency handling
+  - Flight diversions
+  - Live event updates
+  - Scheduling experiments
+  - Performance metrics
 
-The simulator coordinates aircraft, runways, gates, weather conditions, fuel constraints, and emergency events to evaluate different scheduling strategies under realistic operating scenarios.
+- **Simulation**
+  - Simulations run one tick at a time.
+  - Each tick updates flights, fuel, weather, runways, gates, and events.
+  - Flights can land, wait, enter an emergency state, use a gate, complete their trip, or be diverted.
+  - Each simulation keeps its own airport state.
 
-The primary focus of the project is distributed systems, simulation, backend engineering, and resource scheduling.
+- **Airport Agents**
+  - Flight agents store flight details, fuel, passengers, arrival time, status, and assigned resources.
+  - Runway agents track runway length, availability, closures, and completed landings.
+  - Gate agents track aircraft compatibility, availability, and gate occupancy.
+  - Weather agents generate conditions such as rain, fog, snow, storms, and high winds.
 
----
+- **Scheduling Algorithms**
+  - First Come First Served
+  - Fuel Priority
+  - Weighted Priority
+  - Random Scheduling
+  - Constraint-based Scheduling
+  - The same scenario can be tested with different algorithms for comparison.
 
-## Main Features
+- **Events**
+  - Flight created
+  - Flight arrived
+  - Landing requested
+  - Fuel low
+  - Fuel critical
+  - Emergency declared
+  - Runway assigned
+  - Landing completed
+  - Gate assigned
+  - Weather changed
+  - Runway closed
+  - Flight diverted
+  - Simulation completed
 
-- Airport operations simulation
-- Aircraft lifecycle management
-- Runway scheduling
-- Gate assignment
-- Weather simulation
-- Fuel monitoring
-- Emergency handling
-- Event-driven architecture
-- Real-time event streaming
-- Experiment framework
-- Performance benchmarking
+- **Metrics**
+  - Average delay
+  - Maximum delay
+  - Passenger delay
+  - Completed flights
+  - Diverted flights
+  - Emergency count
+  - Runway utilization
+  - Gate utilization
+  - Throughput
+  - Fairness score
+  - Overall simulation score
 
----
+- **API**
+  - Create simulations
+  - Add flights, runways, and gates
+  - Generate sample airport data
+  - Run one or more simulation ticks
+  - Run a full simulation
+  - View simulation state
+  - View events
+  - View metrics
+  - Compare scheduling algorithms
+  - Stream live events
 
-## Airport Simulation
+- **Tech Stack**
+  - Python
+  - FastAPI
+  - PostgreSQL
+  - Redis
+  - Docker
+  - Pytest
 
-Models airport operations including:
+- **Project Structure**
+  - `app`
+    - `main.py`
+    - `airport`
+      - `agents.py`
+      - `engine.py`
+      - `metrics.py`
+      - `schedule.py`
+      - `weather.py`
+    - `web`
+      - `api.py`
+      - `events.py`
+    - `data`
+      - `db.py`
+      - `store.py`
+    - `other`
+      - `ai.py`
+      - `settings.py`
+      - `tasks.py`
+      - `types.py`
+  - `tests`
+  - `Dockerfile`
+  - `docker-compose.yml`
+  - `requirements.txt`
 
-- Aircraft arrivals
-- Landing queues
-- Runway availability
-- Gate allocation
-- Taxi operations
-- Flight diversions
-- Weather disruptions
-- Emergency landings
+- **Running the Project**
+  - Install the required Python packages.
+  - Configure the database and Redis settings.
+  - Start the required services.
+  - Run the FastAPI application.
+  - Docker Compose can also be used to start the project.
+  - Open the FastAPI documentation page to test the endpoints.
 
----
+- **Testing**
+  - Pytest is used for automated testing.
+  - Tests cover the API, simulation engine, agents, scheduling algorithms, events, metrics, and experiments.
+  - Run the tests using `pytest`.
 
-## Scheduling Algorithms
-
-Implemented scheduling strategies include:
-
-- First Come First Served
-- Fuel Priority
-- Weighted Priority
-- Constraint-based scheduling
-
-Each strategy can be benchmarked using identical simulation scenarios.
-
----
-
-## Experiment Framework
-
-Supports:
-
-- Seeded simulations
-- Repeatable experiments
-- Multiple scheduling strategies
-- Performance comparisons
-- Batch simulation execution
-
----
-
-## Metrics
-
-Tracks:
-
-- Average arrival delay
-- Passenger delay
-- Flights completed
-- Flight diversions
-- Emergency events
-- Runway utilization
-- Gate utilization
-- Overall simulation score
-
----
-
-## Tech Stack
-
-### Backend
-
-- Python
-- FastAPI
-
-### Database
-
-- PostgreSQL
-- SQLAlchemy
-
-### Infrastructure
-
-- Redis
-- Docker
-- WebSockets
-
-### Testing
-
-- Pytest
-
----
-
-## Project Statistics
-
-- 80+ source files
-- 30+ Python modules
-- 10+ API endpoints
-- 4 scheduling algorithms
-- 15+ event types
-- 1000+ automated tests
-- 12000+ lines of code
-
----
-
-## Project Structure
-
-```text
-app/
-    api/
-    core/
-    db/
-    domain/
-    services/
-    sim/
-
-tests/
-
-infra/
-```
-
----
-
-## API
-
-Provides endpoints to:
-
-- Create simulations
-- Execute simulations
-- Advance simulation time
-- Run scheduling experiments
-- Retrieve simulation state
-- Retrieve performance metrics
-- Stream live simulation events
-
----
-
-## Setup
-
-A standard Python environment together with the required backend services is expected before running the application.
-
-Install the required dependencies, configure the environment, initialize the supporting services, and start the API using a standard ASGI server.
+- **Project Details**
+  - More than 8,000 lines of code
+  - 150 automated tests
+  - Multiple scheduling algorithms
+  - Real-time event streaming
+  - Database and cache support
