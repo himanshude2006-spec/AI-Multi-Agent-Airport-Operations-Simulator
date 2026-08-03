@@ -1,0 +1,170 @@
+services:
+  app:
+    image: python:3.12-slim
+    container_name: airport_simulator_app
+    working_dir: /project
+    command:
+      - sh
+      - -c
+      - pip install --no-cache-dir -e . && uvicorn app.main:app --host 0.0.0.0 --port 8000
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/project
+      - app_cache:/root/.cache/pip
+    env_file:
+      - .env
+    environment:
+      APP_NAME: AI Multi-Agent Airport Operations Simulator
+      APP_HOST: 0.0.0.0
+      APP_PORT: 8000
+      DATABASE_URL: postgresql+psycopg://airport_user:airport_pass@postgres:5432/airport_simulator
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_URL: redis://redis:6379/2
+      USE_DATABASE: "true"
+      USE_REDIS: "true"
+      USE_CELERY: "true"
+      PYTHONUNBUFFERED: "1"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - import urllib.request; urllib.request.urlopen('http://localhost:8000/health')
+      interval: 15s
+      timeout: 8s
+      retries: 10
+      start_period: 45s
+    restart: unless-stopped
+    networks:
+      - airport_net
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  worker:
+    image: python:3.12-slim
+    container_name: airport_simulator_worker
+    working_dir: /project
+    command:
+      - sh
+      - -c
+      - pip install --no-cache-dir -e . && celery -A app.other.tasks.celery_app worker --loglevel=info --concurrency=2
+    volumes:
+      - .:/project
+      - worker_cache:/root/.cache/pip
+    env_file:
+      - .env
+    environment:
+      APP_NAME: AI Multi-Agent Airport Operations Simulator
+      DATABASE_URL: postgresql+psycopg://airport_user:airport_pass@postgres:5432/airport_simulator
+      REDIS_URL: redis://redis:6379/0
+      CELERY_BROKER_URL: redis://redis:6379/1
+      CELERY_RESULT_URL: redis://redis:6379/2
+      USE_DATABASE: "true"
+      USE_REDIS: "true"
+      USE_CELERY: "true"
+      PYTHONUNBUFFERED: "1"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+    networks:
+      - airport_net
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  postgres:
+    image: postgres:16-alpine
+    container_name: airport_simulator_postgres
+    environment:
+      POSTGRES_DB: airport_simulator
+      POSTGRES_USER: airport_user
+      POSTGRES_PASSWORD: airport_pass
+      PGDATA: /var/lib/postgresql/data/pgdata
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - pg_isready -U airport_user -d airport_simulator
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 10s
+    restart: unless-stopped
+    networks:
+      - airport_net
+    shm_size: 256mb
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+  redis:
+    image: redis:7-alpine
+    container_name: airport_simulator_redis
+    command:
+      - redis-server
+      - --appendonly
+      - "yes"
+      - --save
+      - "60"
+      - "1"
+      - --maxmemory
+      - 256mb
+      - --maxmemory-policy
+      - allkeys-lru
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test:
+        - CMD
+        - redis-cli
+        - ping
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 5s
+    restart: unless-stopped
+    networks:
+      - airport_net
+    logging:
+      driver: json-file
+      options:
+        max-size: 10m
+        max-file: "3"
+
+networks:
+  airport_net:
+    name: airport_simulator_network
+    driver: bridge
+    attachable: true
+
+volumes:
+  postgres_data:
+    name: airport_simulator_postgres_data
+  redis_data:
+    name: airport_simulator_redis_data
+  app_cache:
+    name: airport_simulator_app_cache
+  worker_cache:
+    name: airport_simulator_worker_cache
