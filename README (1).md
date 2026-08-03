@@ -165,13 +165,7 @@ The API can be used to:
 
 ## Setup
 
-Install the required packages and configure the database and Redis settings.
-
-Start the required services and run the FastAPI application.
-
-Docker Compose can also be used to start the project.
-
-Open the FastAPI documentation page to test the available endpoints.
+Install the required packages and configure the database and Redis settings, start the required services and run the FastAPI application, and open the FastAPI documentation page to test the available endpoints.
 
 ---
 
